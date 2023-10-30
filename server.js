@@ -1,37 +1,62 @@
-const { PDFDocument } = require("pdf-lib");
+const { PDFDocument, rgb, degrees, StandardFonts } = require("pdf-lib");
 const fs = require("fs");
 
-async function addWatermarkToPdf(pdfPath, watermarkPath, outputPath) {
+async function addWatermarkToPdf(pdfPath, text, outputPath) {
   const pdfBuffer = fs.readFileSync(pdfPath);
-  const watermarkBuffer = fs.readFileSync(watermarkPath);
-
   const pdfDoc = await PDFDocument.load(pdfBuffer, { ignoreEncryption: true });
-  const watermarkImage = await pdfDoc.embedPng(watermarkBuffer);
+
+  const customFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+  const textSize = 35
+  const textWidth = customFont.widthOfTextAtSize(text, textSize)
+  const textHeight = customFont.heightAtSize(textSize)
 
   for (let i = 0; i < pdfDoc.getPageCount(); i++) {
     const page = pdfDoc.getPage(i);
     const { width, height } = page.getSize();
-
-    const watermarkWidth = 200;
-    const watermarkHeight =
-      (watermarkWidth / watermarkImage.width) * watermarkImage.height;
-    page.drawImage(watermarkImage, {
-      x: width / 2 - watermarkWidth / 2,
-      y: height / 2 - watermarkHeight / 2,
-      width: watermarkWidth,
-      height: watermarkHeight,
+    const rotationAngle = degrees(20.25);
+    const fontSize = 16;
+    // Top Left Position
+    page.drawText(watermarkText, {
+      x: 50,
+      y: height - 175,
+      size: fontSize,
+      color: rgb(0.5, 0.5, 0.5),
       opacity: 0.5,
+      rotate: rotationAngle,
+    });
+
+    // Middle Position
+    page.drawText(watermarkText, {
+      x: width / 2 - textWidth / 2,
+      y: height / 2 - textHeight / 2,
+      size: fontSize,
+      color: rgb(0.5, 0.5, 0.5),
+      opacity: 0.5,
+      rotate: rotationAngle,
+    });
+
+    // Bottom Right Position
+    page.drawText(watermarkText, {
+      x: width - 300,
+      y: 100,
+      size: fontSize,
+      color: rgb(0.5, 0.5, 0.5),
+      opacity: 0.5,
+      rotate: rotationAngle,
     });
   }
 
   const modifiedPdfBytes = await pdfDoc.save();
   fs.writeFileSync(outputPath, modifiedPdfBytes);
 
-  console.log("Watermark added to all pages of the PDF successfully!");
+  console.log(
+    "Rotated text watermarks added to different positions on the PDF successfully!"
+  );
 }
 
 const pdfPath = "input.pdf";
-const watermarkPath = "watermark.png";
+const watermarkText =
+  "Accessed by: Rahi Ahriwar\nEmail ID :  raviahirwar660@gmail.com\nPurchased on :  01-10-2023";
 const outputPath = "output.pdf";
 
-addWatermarkToPdf(pdfPath, watermarkPath, outputPath);
+addWatermarkToPdf(pdfPath, watermarkText, outputPath);
