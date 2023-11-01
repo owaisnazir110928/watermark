@@ -18,17 +18,19 @@ function App() {
     const pdfBytes = await fetch(pdfUrl).then((res) => res.arrayBuffer());
     const pdfDoc = await PDFDocument.load(pdfBytes);
 
-    const profilePngResponse = await fetch(profilePNG);
-    const profilePngBytes = await profilePngResponse.arrayBuffer();
+    const profilePngBytes = await fetch(profilePNG).then((res) =>
+      res.arrayBuffer()
+    );
     const profileImg = await pdfDoc.embedPng(profilePngBytes);
 
-    const emailPngResponse = await fetch(emailPNG);
-    const emailPngBytes = await emailPngResponse.arrayBuffer();
+    const emailPngBytes = await fetch(emailPNG).then((res) =>
+      res.arrayBuffer()
+    );
     const emailImg = await pdfDoc.embedPng(emailPngBytes);
 
-    const tagPngResponse = await fetch(tagPNG);
-    const tagPngBytes = await tagPngResponse.arrayBuffer();
+    const tagPngBytes = await fetch(tagPNG).then((res) => res.arrayBuffer());
     const tagImg = await pdfDoc.embedPng(tagPngBytes);
+
     const fontSize = 16;
     const opacity = 0.2;
 
