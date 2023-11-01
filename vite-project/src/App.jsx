@@ -7,7 +7,6 @@ import emailPNG from "../email.png";
 import tagPNG from "../tag.png";
 
 function App() {
-
   const email = "owaisnazir110928@gmail.com";
   const userName = "Owais Nazir Dar";
   const utcdate = new Date("01/10/2023");
