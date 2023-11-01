@@ -7,8 +7,7 @@ import emailPNG from "../email.png";
 import tagPNG from "../tag.png";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const outputPath = "output.pdf";
+
   const email = "owaisnazir110928@gmail.com";
   const userName = "Owais Nazir Dar";
   const utcdate = new Date("01/10/2023");
@@ -83,14 +82,14 @@ function App() {
   }
 
   useEffect(() => {
-    addWatermarkToPdf(watermarkText, outputPath);
+    addWatermarkToPdf(watermarkText);
   }, []);
 
   return (
     <>
       <button
         onClick={() => {
-          addWatermarkToPdf(watermarkText, outputPath);
+          addWatermarkToPdf(watermarkText);
         }}
       >
         Click here
